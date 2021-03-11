@@ -1,7 +1,11 @@
 const express = require('express');
 const app = express();
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const PORT = 3050;
+
+app.use(cors());
+
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
@@ -168,6 +172,30 @@ app.delete("/game/:id",(req,res)=>{
 
 });
 
+app.put("/game/:id",(req,res)=>{
+    var id  = parseInt(req.params.id);
+    var game = DB.games.find(g=>g.id==id);
+
+    if(game != undefined){
+
+        var {title,price,year} = req.body;
+
+        if (title != undefined) {
+            game.title = title;
+        }
+        if (price != undefined) {
+            game.price = price;
+        }
+        if (year != undefined) {
+            game.year = year;
+        }
+
+        res.sendStatus(200);
+
+    }else{
+        res.sendStatus(404);
+    }
+});
 
 
 app.listen(PORT,()=>{
